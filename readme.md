@@ -207,6 +207,40 @@ npx skills add https://github.com/obra/superpowers --skill verification-before-c
 → graphify-out/GRAPH_REPORT.md 확인
 ```
 
+## 아이디어를 낼 때 참조 순서
+
+사용자가 특정 아이디어를 제시하면 Codex는 먼저 전체 지식 지도를 보고, 그다음 wiki 색인과 관련 노트로 내려갑니다.
+
+1. `graphify-out/GRAPH_REPORT.md`
+   전체 지식 지도입니다. 많이 연결된 파일, 핵심 노드, 기존 아이디어와의 연결 가능성을 먼저 확인합니다.
+2. `llm-wiki/wiki/index.md`
+   wiki 목차입니다. 관련 concept, entity, idea, decision 문서를 찾는 출발점입니다.
+3. 관련 wiki 문서
+   예를 들어 AI 에이전트 아이디어라면 `기업 AI 에이전트 도입`, `AI 에이전트 선택 체크리스트`, `AI 에이전트 시장 지도` 같은 문서를 먼저 봅니다.
+4. 기존 idea/decision 문서
+   비슷한 아이디어나 이미 내린 결정이 있으면 새 아이디어를 그 문서와 연결합니다.
+5. 원천 자료
+   wiki만으로 근거가 부족하면 `llm-wiki/wiki/sources/` 또는 `sources/`의 원자료를 확인합니다.
+
+관련 내용이 없을 때는 이렇게 처리합니다.
+
+- 기존 그래프와 wiki에서 직접 관련된 문서를 찾지 못했다고 먼저 밝힙니다.
+- 아이디어 자체를 1차 메모로 삼아 문제, 대상 사용자, 핵심 가정, 검증 질문, 첫 실험을 정리합니다.
+- 다시 볼 가치가 있는 아이디어는 `llm-wiki/wiki/ideas/`에 새 노트로 저장합니다.
+- 새 개념으로 분리할 가치가 있으면 `llm-wiki/wiki/concepts/`에 별도 노트를 만듭니다.
+- 근거 자료가 부족하면 사용자가 `sources/`에 원자료를 추가하거나, 최신 확인이 필요한 경우 웹 검색으로 보강합니다.
+- 새 문서가 생기면 `llm-wiki/wiki/index.md`, `llm-wiki/wiki/log.md`, Graphify 그래프를 갱신합니다.
+
+아이디어가 구체화되면 산출물은 성격에 따라 저장합니다.
+
+| 성격 | 저장 위치 |
+| --- | --- |
+| 발전 중인 아이디어 | `llm-wiki/wiki/ideas/` |
+| 결정과 근거 | `llm-wiki/wiki/decisions/` |
+| 실행계획/기획서 | `llm-wiki/outputs/docs/` |
+| 발표 초안 | `llm-wiki/outputs/slides/` |
+| Google Apps Script 코드 | `llm-wiki/outputs/apps-script/` |
+
 ## Codex 프롬프트 예시
 
 자료 ingest:

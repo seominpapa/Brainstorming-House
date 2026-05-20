@@ -91,6 +91,22 @@
 3. 관련 `concepts/`, `entities/`, `ideas/`, `decisions/`
 4. 필요하면 `graphify query "<아이디어와 관련된 질문>"`
 
+아이디어를 받을 때의 기본 참조 방식:
+
+- 첫 참조 파일은 항상 `graphify-out/GRAPH_REPORT.md`다. 전체 지식 지도를 보고 god node, 많이 연결된 파일, 관련 커뮤니티를 먼저 확인한다.
+- 다음으로 `llm-wiki/wiki/index.md`를 읽어 관련 concept, entity, idea, decision 문서를 찾는다.
+- AI 에이전트 관련 아이디어라면 우선 `llm-wiki/wiki/concepts/enterprise-ai-agent-adoption.md`, `llm-wiki/wiki/concepts/ai-agent-selection-checklist.md`, `llm-wiki/wiki/concepts/ai-agent-market-map.md`를 확인한다.
+- 이미 유사한 아이디어가 있으면 `llm-wiki/wiki/ideas/`의 기존 아이디어 문서를 먼저 읽고, 새 아이디어를 기존 노트와 연결한다.
+- wiki만으로 근거가 부족하거나 출처 확인이 필요하면 `llm-wiki/wiki/sources/`와 `sources/` 원자료를 확인한다.
+
+관련 내용이 없을 때의 처리:
+
+- `GRAPH_REPORT.md`, `index.md`, 관련 wiki 폴더에서 유사 노트를 찾지 못하면 "현재 wiki에는 직접 관련된 기존 문서가 없다"고 명시한다.
+- 이 경우에도 작업을 멈추지 않고 사용자 아이디어 자체를 1차 원문으로 삼아 문제, 대상 사용자, 가정, 검증 질문, 첫 실험을 정리한다.
+- 새 아이디어로 재사용할 가치가 있으면 `llm-wiki/wiki/ideas/`에 새 노트를 만들고, 개념 정리가 필요하면 `llm-wiki/wiki/concepts/`에 새 노트를 만든다.
+- 사실 확인이나 시장/기업 근거가 필요한데 로컬 자료가 없으면 사용자에게 원자료 추가를 요청하거나, 최신 정보가 필요한 경우 웹 검색을 통해 확인한다.
+- 새 노트를 만들거나 wiki 구조가 바뀌면 `llm-wiki/wiki/index.md`, `llm-wiki/wiki/log.md`를 갱신하고 Graphify를 다시 갱신한다.
+
 활용 도구:
 
 - LLM Wiki: 기존 지식과 아이디어를 연결
