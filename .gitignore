@@ -1,0 +1,18 @@
+.codex/
+.uv-cache/
+.uv-tools/
+
+# Local knowledge base and generated/research content.
+llm-wiki-graphify-gstack-superpowers-install-guide.txt
+graphify-out/
+llm-wiki/
+sources/
+scources/
+
+# Local editor/session state.
+.obsidian/workspace.json
+
+# OS/editor noise.
+Thumbs.db
+Desktop.ini
+.DS_Store
