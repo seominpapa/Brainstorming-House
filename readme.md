@@ -1,251 +1,248 @@
-# LLM Wiki Ideation Workflow
+# Brainstorming House
 
-이 폴더는 개인 지식 관리와 아이디어 확장을 위해 만든 LLM Wiki 작업 공간입니다. 기본 방향은 Karpathy의 LLM Wiki 패턴을 기반으로, gstack의 `office-hours`식 아이디어 압박 질문과 Superpowers의 `brainstorming`식 단계적 정리를 결합하는 것입니다.
+LLM Wiki, Graphify, gstack, Superpowers를 함께 사용하는 개인 지식 기획 작업공간입니다.
 
-## Skill Folder
+이 저장소는 AI 에이전트/기업 리서치 자료를 `sources/`에 모으고, LLM이 `llm-wiki/` 아래에 요약/개념/엔티티/아이디어 노트를 축적한 뒤, Graphify로 `graphify-out/` 지식 그래프를 생성하는 흐름을 기준으로 합니다.
 
-Codex가 사용하는 개인 스킬은 아래 위치에 있습니다.
+## 현재 저장소 정책
 
-```text
-C:\Users\com\.codex\skills\llm-wiki-ideation\
-├── SKILL.md
-├── agents\
-│   └── openai.yaml
-└── references\
-    ├── wiki-schema.md
-    ├── ideation-roles.md
-    └── brainstorming.md
-```
+원본 자료와 생성된 지식 파일은 개인 작업물이라 GitHub에 올리지 않습니다.
 
-각 파일의 역할은 다음과 같습니다.
+- `sources/`: 원본 Markdown, PDF, 웹/SNS 캡처 자료
+- `llm-wiki/`: LLM이 정리한 위키 노트와 산출물
+- `graphify-out/`: Graphify 리포트, JSON, HTML, 캐시
+- `llm-wiki-graphify-gstack-superpowers-install-guide.txt`: 로컬 설치 가이드
 
-- `SKILL.md`: 스킬의 메인 사용 규칙입니다. 언제 이 스킬을 쓰고, 어떤 순서로 wiki를 읽고 업데이트할지 정의합니다.
-- `agents/openai.yaml`: Codex UI에 표시될 스킬 이름, 설명, 기본 프롬프트를 담습니다.
-- `references/wiki-schema.md`: `llm-wiki`를 처음 만들 때 쓰는 기본 구조와 문서 규칙입니다.
-- `references/ideation-roles.md`: gstack `office-hours`에서 영감을 받은 아이디어 압박 질문과 역할별 검토 기준입니다.
-- `references/brainstorming.md`: Superpowers `brainstorming`에서 영감을 받은 질문, 접근안 비교, 스펙화 흐름입니다.
+위 경로는 `.gitignore`로 내용 파일을 제외하고, clone 사용자가 폴더 구조를 볼 수 있도록 `.gitkeep`만 추적합니다.
 
-## Wiki Folder
-
-현재 작업 폴더 안의 실제 지식 저장소는 아래 구조를 사용합니다.
+## 폴더 구조
 
 ```text
-llm-wiki\
+Brainstorming-House/
 ├── AGENTS.md
-├── raw\
-├── wiki\
-│   ├── index.md
-│   ├── log.md
-│   ├── sources\
-│   ├── concepts\
-│   ├── entities\
-│   ├── ideas\
-│   └── decisions\
-└── outputs\
-    ├── docs\
-    └── slides\
+├── readme.md
+├── scripts/
+│   ├── build-wiki-graph.mjs
+│   └── localize-wiki-ko.mjs
+├── sources/
+│   ├── pdf/
+│   ├── sns/
+│   └── web/
+├── llm-wiki/
+│   ├── raw/
+│   ├── wiki/
+│   │   ├── sources/
+│   │   ├── concepts/
+│   │   ├── entities/
+│   │   ├── ideas/
+│   │   └── decisions/
+│   └── outputs/
+│       ├── apps-script/
+│       ├── docs/
+│       └── slides/
+└── graphify-out/
+    └── cache/
 ```
 
-Graphify 산출물은 현재 폴더의 아래 위치에 생성됩니다.
+## 필수 의존성
 
-```text
-graphify-out\
-├── graph.html
-├── graph.json
-├── GRAPH_REPORT.md
-└── manifest.json
+| 도구 | 용도 | 설치 URL |
+| --- | --- | --- |
+| Git | 저장소 clone, commit, push | https://git-scm.com/downloads |
+| GitHub CLI | GitHub 인증, repo 생성/확인 | https://cli.github.com/ |
+| Node.js / npm / npx | Superpowers 설치, 로컬 graph HTML 생성 스크립트 | https://nodejs.org/ |
+| Python 3.10+ | Graphify 실행 기반 | https://www.python.org/downloads/ |
+| uv | Python CLI 도구 설치 권장 방식 | https://github.com/astral-sh/uv |
+| Codex | AI coding/agent 작업 환경 | https://github.com/openai/codex |
+| Obsidian | 로컬 Markdown wiki 탐색 | https://obsidian.md/download |
+
+Windows 예시:
+
+```powershell
+winget install --id Git.Git -e
+winget install --id GitHub.cli -e
+winget install --id OpenJS.NodeJS.LTS -e
+winget install --id Python.Python.3.12 -e
+winget install --id astral-sh.uv -e
+npm i -g @openai/codex
 ```
 
-각 폴더의 역할은 다음과 같습니다.
+## 설치된/사용 중인 스킬
 
-- `llm-wiki/AGENTS.md`: 이 wiki를 어떻게 유지할지 정의하는 운영 가이드입니다.
-- `llm-wiki/raw/`: 원본 자료를 보관합니다. 원본은 수정하지 않습니다.
-- `llm-wiki/wiki/index.md`: wiki 전체 목차입니다.
-- `llm-wiki/wiki/log.md`: ingest, query, idea, lint, doc, slides 작업 기록입니다.
-- `llm-wiki/wiki/sources/`: 원본 자료별 요약 페이지를 둡니다.
-- `llm-wiki/wiki/concepts/`: 반복해서 쓰이는 개념, 프레임워크, mental model을 둡니다.
-- `llm-wiki/wiki/entities/`: 사람, 조직, 제품, 프로젝트, 장소 등을 둡니다.
-- `llm-wiki/wiki/ideas/`: 아직 발전 중인 아이디어를 둡니다.
-- `llm-wiki/wiki/decisions/`: 결정된 방향, 이유, 대안, 남은 질문을 둡니다.
-- `llm-wiki/outputs/docs/`: 문서 초안 Markdown을 둡니다.
-- `llm-wiki/outputs/slides/`: 발표자료 초안 Markdown을 둡니다.
+### LLM Wiki
 
-## Idea Brainstorming Workflow
+LLM Wiki는 원본 자료를 반복해서 다시 읽는 대신, LLM이 원본을 Markdown 지식베이스로 컴파일하고 cross-link를 쌓아가는 방식입니다.
 
-아이디어를 제시하면 기본 프로세스는 다음 순서로 진행됩니다.
+- 참고 repo: https://github.com/lewislulu/llm-wiki-skill
+- OpenAI Skills Catalog: https://github.com/openai/skills
+- 현재 로컬 skill 경로 예시: `C:\Users\com\.codex\skills\llm-wiki-ideation\`
 
-```text
-아이디어 입력
-→ LLM Wiki 맥락 확인
-→ gstack office-hours식 리프레이밍
-→ Superpowers brainstorming식 접근안 비교
-→ 추천 방향 확인
-→ 짧은 스펙 작성
-→ wiki에 축적
-→ Graphify 그래프 갱신
-→ 필요 시 문서/발표 초안 생성
+Codex 설치 예시:
+
+```powershell
+git clone https://github.com/lewislulu/llm-wiki-skill.git C:\tmp\llm-wiki-skill
+New-Item -ItemType Directory -Force $env:USERPROFILE\.codex\skills
+Copy-Item -Recurse -Force C:\tmp\llm-wiki-skill\llm-wiki $env:USERPROFILE\.codex\skills\llm-wiki
 ```
 
-## Step 1. Wiki Context Check
+이 프로젝트에서는 `llm-wiki-ideation` 형태로 확장해 사용합니다. 기본 작업 순서는 다음과 같습니다.
 
-먼저 아래 파일을 읽고, 기존 지식과 연결점을 찾습니다.
+1. `sources/`에 원본 자료 저장
+2. LLM Wiki skill로 `llm-wiki/wiki/sources`, `concepts`, `entities`, `ideas`, `decisions` 작성
+3. `llm-wiki/wiki/index.md`와 `llm-wiki/wiki/log.md` 갱신
+4. Graphify로 지식 그래프 갱신
 
-- `llm-wiki/AGENTS.md`
-- `llm-wiki/wiki/index.md`
-- `llm-wiki/wiki/log.md`
-- 관련된 `concepts`, `ideas`, `decisions`, `sources` 페이지
+### Graphify
 
-관련 지식이 있으면 그 맥락 위에서 아이디어를 확장합니다. 관련 지식이 없으면 “현재 wiki에는 관련 맥락이 없다”고 밝힌 뒤, 사용자가 준 아이디어 자체에서 출발합니다.
+Graphify는 코드/문서/PDF/Markdown을 분석해 지식 그래프를 만들고, `graphify-out/GRAPH_REPORT.md`, `graph.json`, `graph.html` 등을 생성합니다.
 
-## Step 2. Office-Hours Reframe
+- 공식 사이트: https://graphify.net/
+- GitHub: https://github.com/safishamsi/graphify
+- PyPI 패키지: https://pypi.org/project/graphifyy/
 
-gstack의 `office-hours`처럼 아이디어를 그대로 받아들이지 않고, 먼저 문제의 본질을 다시 봅니다.
+설치:
 
-확인하는 질문은 다음과 같습니다.
-
-- 사용자가 실제로 겪는 고통은 무엇인가?
-- 지금 아이디어는 너무 좁거나 너무 넓게 잡혀 있지 않은가?
-- 가장 작게 검증할 수 있는 wedge는 무엇인가?
-- 이 아이디어가 10배 더 좋아진다면 어떤 모습인가?
-- 지금 하지 말아야 할 것은 무엇인가?
-- 어떤 구체적 상황에서 “이건 지금 꼭 필요하다”고 말하게 되는가?
-- 어떤 증거가 있으면 이 아이디어를 더 밀거나 접을 수 있는가?
-
-이 단계의 출력은 보통 아래 형식을 따릅니다.
-
-```markdown
-## Reframe
-- Original framing:
-- Deeper pain:
-- Smallest wedge:
-- Bigger vision:
-- Immediate test:
+```powershell
+uv tool install graphifyy
+graphify install --platform codex
 ```
 
-## Step 3. Superpowers Brainstorming
-
-Superpowers의 `brainstorming`처럼 한 번에 너무 많은 질문을 하지 않고, 필요한 경우 핵심 질문 하나만 던집니다.
-
-그 다음 2-3개의 접근안을 제시합니다.
-
-```markdown
-## Approaches
-
-### Approach A
-- Shape:
-- Pros:
-- Cons:
-
-### Approach B
-- Shape:
-- Pros:
-- Cons:
-
-### Approach C
-- Shape:
-- Pros:
-- Cons:
-
-## Recommendation
-- Recommended approach:
-- Why:
-```
-
-아이디어가 크거나 문서, 발표, 구현으로 이어질 가능성이 있으면 바로 산출물을 만들지 않고 먼저 방향이 맞는지 확인합니다.
-
-## Step 4. Concise Spec
-
-방향이 잡히면 짧은 스펙으로 정리합니다.
-
-```markdown
-# Idea: Title
-
-## Problem
-
-## Audience
-
-## Proposed Shape
-
-## Non-goals
-
-## Risks
-
-## First Next Step
-
-## Wiki Pages Used
-```
-
-재사용할 가치가 있으면 이 스펙은 `llm-wiki/wiki/ideas/`에 저장합니다. 이미 방향이 결정된 내용이라면 `llm-wiki/wiki/decisions/`에 저장합니다.
-
-## Step 5. Wiki Filing
-
-아이디어 확장이 끝나면 wiki를 업데이트합니다.
-
-- 새 아이디어는 `wiki/ideas/`에 저장합니다.
-- 결정된 내용은 `wiki/decisions/`에 저장합니다.
-- 관련 개념은 `wiki/concepts/`에 연결하거나 새로 만듭니다.
-- `wiki/index.md`에 새 페이지를 추가합니다.
-- `wiki/log.md`에 작업 기록을 남깁니다.
-
-페이지 연결은 Obsidian 스타일 링크를 사용합니다.
-
-```markdown
-[[Page Name]]
-```
-
-## Optional Outputs
-
-사용자가 원할 때만 문서나 발표자료 초안을 만듭니다.
-
-문서 초안:
-
-```text
-llm-wiki/outputs/docs/
-```
-
-발표자료 초안:
-
-```text
-llm-wiki/outputs/slides/
-```
-
-초안에는 어떤 wiki 페이지를 근거로 만들었는지 짧게 남깁니다.
-
-## Visual Graph With Graphify
-
-Graphify가 설치되어 있으며, 아이디어와 wiki 구조를 시각적으로 볼 때 사용합니다.
-
-- 설치 패키지: `graphifyy 0.8.1`
-- 시각화 파일: `graphify-out/graph.html`
-- 요약 리포트: `graphify-out/GRAPH_REPORT.md`
-- 그래프 데이터: `graphify-out/graph.json`
-
-그래프 갱신 명령:
+이 프로젝트의 Windows 권장 실행:
 
 ```powershell
 C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force
 ```
 
-API 키 없이도 구조 그래프는 갱신됩니다. Markdown, PDF, 이미지까지 의미 기반으로 풍부하게 그래프화하려면 `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` 중 하나가 필요합니다.
+로컬 HTML 위키 그래프 재생성:
 
-## Example Prompts
-
-```text
-Use $llm-wiki-ideation to expand this idea using my wiki: ...
+```powershell
+node scripts/build-wiki-graph.mjs
 ```
 
-```text
-Use $llm-wiki-ideation to run office-hours and brainstorming on this idea: ...
+### gstack
+
+gstack은 Garry Tan의 AI 작업용 스킬 묶음입니다. 이 저장소에서는 특히 `office-hours` 흐름으로 아이디어를 압박 질문으로 검증할 때 사용합니다.
+
+- 공식 사이트: https://gstack.lol/
+- GitHub: https://github.com/garrytan/gstack
+- office-hours skill: https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md
+
+Codex 설치 예시:
+
+```bash
+git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/gstack
+cd ~/gstack
+./setup --host codex
 ```
 
-```text
-Use $llm-wiki-ideation to turn this idea into a wiki idea note: ...
-```
+Windows에서는 Git Bash 또는 WSL에서 위 명령을 실행하는 것을 권장합니다.
+
+사용 예시:
 
 ```text
-Use $llm-wiki-ideation to draft a document outline from this idea.
+Use gstack office-hours to pressure-test this idea:
+AI 에이전트 기업 도입 방안
 ```
 
-```text
-Use $llm-wiki-ideation to draft a slide outline from this idea.
+### Superpowers
+
+Superpowers는 agent가 바로 구현으로 뛰어들지 않고, brainstorming, planning, TDD, debugging, verification 같은 절차를 지키도록 돕는 스킬 묶음입니다.
+
+- GitHub: https://github.com/obra/superpowers
+- Skills 페이지: https://skills.sh/obra/superpowers
+
+설치:
+
+```powershell
+npx skills add obra/superpowers
 ```
+
+개별 스킬 설치 예시:
+
+```powershell
+npx skills add https://github.com/obra/superpowers --skill brainstorming
+npx skills add https://github.com/obra/superpowers --skill verification-before-completion
+```
+
+이 프로젝트에서 자주 쓰는 스킬:
+
+- `using-superpowers`: 관련 스킬을 먼저 확인
+- `brainstorming`: 아이디어를 2-3개 접근으로 비교
+- `writing-plans`: 구현 전 계획 작성
+- `systematic-debugging`: 문제 재현과 원인 확인
+- `verification-before-completion`: 완료 주장 전 검증
+
+## 권장 작업 흐름
+
+```text
+자료 수집
+→ sources/에 저장
+→ LLM Wiki ingest
+→ llm-wiki/wiki/에 지식 노트 작성
+→ gstack office-hours로 아이디어 검증
+→ Superpowers brainstorming으로 접근 비교
+→ 문서/슬라이드/Apps Script 산출물 작성
+→ Graphify update
+→ graphify-out/GRAPH_REPORT.md 확인
+```
+
+## Codex 프롬프트 예시
+
+자료 ingest:
+
+```text
+llm-wiki-ideation을 사용해서 sources/ 안의 자료를 ingest해줘.
+원자료는 수정하지 말고, llm-wiki/wiki/sources, concepts, entities, ideas를 갱신해줘.
+작업 후 index.md와 log.md도 갱신해줘.
+```
+
+아이디어 구체화:
+
+```text
+llm-wiki-ideation을 사용해서 아래 아이디어를 기존 wiki 맥락과 연결해 구체화해줘.
+gstack office-hours 방식으로 압박 검증하고,
+Superpowers brainstorming 방식으로 2-3개 접근을 비교한 뒤,
+실행 가능한 문서 초안을 llm-wiki/outputs/docs/에 작성해줘.
+
+아이디어:
+AI 에이전트 기업 도입 방안
+```
+
+Graphify 갱신:
+
+```text
+Graphify를 갱신해줘.
+Windows 경로 문제가 있으면 아래 명령을 사용해줘.
+C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force
+그 다음 graphify-out/GRAPH_REPORT.md의 핵심 노드를 요약해줘.
+```
+
+## GitHub에 올리는 것과 올리지 않는 것
+
+GitHub에는 작업공간 구조, 운영 규칙, 스크립트만 올립니다. 개인 자료와 생성 산출물은 로컬에만 둡니다.
+
+올리는 것:
+
+- `AGENTS.md`
+- `readme.md`
+- `scripts/`
+- 폴더 구조 유지를 위한 `.gitkeep`
+- `.gitignore`
+
+올리지 않는 것:
+
+- `sources/**` 실제 자료
+- `llm-wiki/**` 실제 위키 노트와 산출물
+- `graphify-out/**` 실제 리포트/그래프/캐시
+- 로컬 설치 가이드 txt
+
+## 참고 링크
+
+- LLM Wiki Skill: https://github.com/lewislulu/llm-wiki-skill
+- OpenAI Skills Catalog: https://github.com/openai/skills
+- Graphify: https://github.com/safishamsi/graphify
+- Graphify PyPI: https://pypi.org/project/graphifyy/
+- gstack: https://github.com/garrytan/gstack
+- gstack office-hours: https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md
+- Superpowers: https://github.com/obra/superpowers
+- Superpowers Skills: https://skills.sh/obra/superpowers
