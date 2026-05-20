@@ -24,6 +24,24 @@
 
 ## 질문 유형별 작업 방식
 
+### 로컬 HTML 목업과 인앱 브라우저 사용
+
+사용자가 HTML 목업, 로컬 웹 화면, `localhost`, `127.0.0.1`, 또는 인앱 브라우저 표시를 요청하면 다음 순서로 처리한다.
+
+1. Browser 플러그인이 사용 가능한 경우 먼저 Browser skill 지침을 확인하고 Codex 인앱 브라우저를 우선 사용한다.
+2. 단일 HTML 파일을 바로 보여줘야 하면 `file://`보다 로컬 정적 서버를 우선한다. Windows 환경에서는 다음 방식이 가장 단순하다.
+
+```powershell
+C:\Python314\python.exe -m http.server 8766 --bind 127.0.0.1
+```
+
+3. 서버는 HTML 파일이 있는 폴더에서 실행한다. 예를 들어 `.superpowers/brainstorm/pharma-sales-mockup.html`을 보여줄 때는 `.superpowers/brainstorm`을 working directory로 두고, URL은 `http://127.0.0.1:8766/pharma-sales-mockup.html` 형태로 안내한다.
+4. 백그라운드 서버가 샌드박스 안에서 바로 종료될 수 있으므로, 사용자가 실제로 봐야 하는 로컬 서버는 필요하면 승인 요청 후 샌드박스 밖에서 실행한다.
+5. URL을 안내하거나 브라우저에 열기 전에 반드시 `Invoke-WebRequest -UseBasicParsing <url>`로 `200 OK`와 응답 길이를 확인한다.
+6. 사용자가 이미 열어둔 포트가 죽어 있으면 새 포트를 안내하기보다 가능하면 같은 포트에서 서버를 다시 띄운 뒤 새로고침을 요청한다.
+7. 인앱 브라우저 자동화가 로컬 URL을 `ERR_BLOCKED_BY_CLIENT`, `ERR_CONNECTION_REFUSED`, 또는 Browser Use URL policy로 막으면 우회하지 않는다. 서버 상태, 포트, 바인딩 주소를 확인한 뒤에도 막히면 그 제한을 설명하고, 사용자의 승인 하에 기본 데스크톱 브라우저로 열거나 정적 이미지/스크린샷 대안을 제공한다.
+8. 로컬 HTML 목업은 제품 코드와 구분해 `.superpowers/brainstorm/` 같은 임시 작업 폴더에 둔다. 장기 보존할 설계 산출물이 필요하면 `llm-wiki/outputs/docs/`에 별도 문서로 정리한다.
+
 ### 프로젝트 구조나 현재 상태를 묻는 질문
 
 참고 순서:
