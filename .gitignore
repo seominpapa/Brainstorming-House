@@ -4,10 +4,22 @@
 
 # Local knowledge base and generated/research content.
 llm-wiki-graphify-gstack-superpowers-install-guide.txt
-graphify-out/
-llm-wiki/
-sources/
-scources/
+graphify-out/**
+!graphify-out/
+!graphify-out/**/
+!graphify-out/**/.gitkeep
+llm-wiki/**
+!llm-wiki/
+!llm-wiki/**/
+!llm-wiki/**/.gitkeep
+sources/**
+!sources/
+!sources/**/
+!sources/**/.gitkeep
+scources/**
+!scources/
+!scources/**/
+!scources/**/.gitkeep
 
 # Local editor/session state.
 .obsidian/workspace.json
