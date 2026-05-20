@@ -1,16 +1,157 @@
-## graphify
+# 프로젝트 에이전트 운영 규칙
 
-This project has a knowledge graph at `graphify-out/` with god nodes, community structure, and cross-file relationships.
+이 프로젝트는 `sources/`에 수집한 원자료를 LLM Wiki로 정리하고, Graphify로 관계를 시각화한 뒤, gstack과 Superpowers를 활용해 아이디어를 검증하고 실행 가능한 산출물로 발전시키는 개인 지식 기획 작업공간이다.
 
-When the user types `/graphify`, invoke the `skill` tool with `skill: "graphify"` before doing anything else.
+기본 응답과 작성물은 한국어로 작성한다. 제품명, 회사명, 라이브러리명, 명령어처럼 영어 표기가 자연스러운 항목은 원문을 유지한다.
 
-Rules:
-- ALWAYS read `graphify-out/GRAPH_REPORT.md` before reading source files, running grep/glob searches, or answering codebase questions. The graph is your primary map of the codebase.
-- IF `graphify-out/wiki/index.md` EXISTS, navigate it instead of reading raw files.
-- Keep `llm-wiki/wiki/**/*.md` content in Korean by default: H1 titles, section headings, summaries, key points, and Obsidian-style `[[...]]` page links should be Korean unless a product/company name is normally written in English.
-- Do not show table-of-contents or operational files as graph content nodes. Exclude `llm-wiki/AGENTS.md`, `llm-wiki/wiki/index.md`, `llm-wiki/wiki/log.md`, and raw manifest files from the visual knowledge graph.
-- The HTML knowledge graph must show directed arrows for file-to-file wiki links. A line `A -> B` means `A.md` contains an Obsidian-style link that resolves to `B.md`; bidirectional arrows mean both pages link to each other.
-- When regenerating the local HTML graph, prefer `node scripts/build-wiki-graph.mjs`; it outputs `graphify-out/graph.json`, `graphify-out/graph.html`, `graphify-out/wiki-graph.json`, and `graphify-out/wiki-graph.html` with Korean UI labels and arrow markers.
-- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep; these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files.
-- On this Windows workspace, prefer `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify ...` if the `graphify` shim fails on the workspace path.
-- After modifying code or wiki structure, run `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force` to keep the graph current (AST-only, no API cost).
+## Graphify 우선 규칙
+
+이 프로젝트에는 `graphify-out/`에 god node, community structure, cross-file relationship을 담은 지식 그래프가 있다.
+
+사용자가 `/graphify`를 입력하면 다른 작업보다 먼저 `skill` tool을 `skill: "graphify"`로 호출한다.
+
+규칙:
+
+- 소스 파일을 읽거나, grep/glob 검색을 하거나, 코드베이스/문서 구조 질문에 답하기 전에 항상 `graphify-out/GRAPH_REPORT.md`를 먼저 읽는다. 그래프가 이 프로젝트의 1차 지도다.
+- `graphify-out/wiki/index.md`가 있으면 raw file을 바로 읽기보다 해당 wiki index를 먼저 탐색한다.
+- `llm-wiki/wiki/**/*.md` 내용은 기본적으로 한국어로 유지한다. H1 제목, 섹션 제목, 요약, 핵심 포인트, Obsidian 스타일 `[[...]]` 링크도 한국어를 우선한다.
+- 목차나 운영 파일은 그래프 콘텐츠 노드로 보여주지 않는다. 시각 지식 그래프에서는 `llm-wiki/AGENTS.md`, `llm-wiki/wiki/index.md`, `llm-wiki/wiki/log.md`, raw manifest 파일을 제외한다.
+- HTML 지식 그래프는 파일 간 wiki link를 방향 화살표로 보여줘야 한다. `A -> B`는 `A.md`가 `B.md`로 해석되는 Obsidian 스타일 링크를 포함한다는 뜻이다. 양방향 링크는 양쪽 페이지가 서로 링크한다는 뜻이다.
+- 로컬 HTML 그래프를 재생성할 때는 `node scripts/build-wiki-graph.mjs`를 우선 사용한다. 이 스크립트는 `graphify-out/graph.json`, `graphify-out/graph.html`, `graphify-out/wiki-graph.json`, `graphify-out/wiki-graph.html`을 생성하며, 한국어 UI label과 arrow marker를 포함한다.
+- "X와 Y가 어떻게 연결되는가" 같은 cross-module 질문은 grep보다 `graphify query "<question>"`, `graphify path "<A>" "<B>"`, `graphify explain "<concept>"`를 우선 사용한다. 이 명령들은 단순 파일 검색이 아니라 EXTRACTED + INFERRED edge를 따라간다.
+- Windows workspace에서 `graphify` shim이 경로 문제로 실패하면 `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify ...`를 사용한다.
+- 코드, wiki 구조, README/AGENTS 같은 프로젝트 운영 문서를 수정한 뒤에는 `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force`를 실행해 그래프를 최신 상태로 유지한다. 이 업데이트는 AST-only라 API 비용이 없다.
+
+## 질문 유형별 작업 방식
+
+### 프로젝트 구조나 현재 상태를 묻는 질문
+
+참고 순서:
+
+1. `graphify-out/GRAPH_REPORT.md`
+2. `graphify-out/wiki/index.md`가 있으면 해당 index
+3. `readme.md`
+4. 필요한 경우에만 관련 원본 파일
+
+응답 방식:
+
+- 그래프의 god node, community, surprising connection을 먼저 활용해 큰 지형을 설명한다.
+- 필요한 파일 경로는 절대 경로 링크로 제시한다.
+- 변경이 필요 없는 질문이면 파일을 수정하지 않는다.
+
+### 특정 개념, 기업, 시장, 기술 관계를 묻는 질문
+
+참고 순서:
+
+1. `graphify-out/GRAPH_REPORT.md`
+2. `llm-wiki/wiki/index.md`
+3. 관련 `llm-wiki/wiki/concepts/`, `entities/`, `sources/` 문서
+4. 관계형 질문이면 `graphify query`, `graphify explain`, `graphify path`
+
+활용 도구:
+
+- Graphify: 개념 간 연결, 핵심 노드, 경로 확인
+- LLM Wiki: 기존 요약, 출처, 개념 노트 확인
+
+성과물 저장:
+
+- 새 개념 정리가 필요하면 `llm-wiki/wiki/concepts/`에 저장한다.
+- 기업/인물/제품 정리가 필요하면 `llm-wiki/wiki/entities/`에 저장한다.
+- 원천 자료 요약이면 `llm-wiki/wiki/sources/`에 저장한다.
+- 변경했다면 `llm-wiki/wiki/index.md`와 `llm-wiki/wiki/log.md`도 함께 갱신한다.
+
+### 자료 ingest 또는 원천 자료 정리를 요청한 경우
+
+참고 순서:
+
+1. `sources/`
+2. `llm-wiki/wiki/index.md`
+3. `llm-wiki/wiki/log.md`
+4. 기존 `llm-wiki/wiki/sources/`, `concepts/`, `entities/`, `ideas/`
+
+활용 도구:
+
+- LLM Wiki 또는 `llm-wiki-ideation`: 원자료를 wiki note로 변환하고 cross-link 생성
+- Graphify: ingest 이후 관계 그래프 갱신
+
+성과물 저장:
+
+- 웹/SNS/PDF 원자료 요약은 `llm-wiki/wiki/sources/`에 저장한다.
+- 반복 등장하는 주제는 `llm-wiki/wiki/concepts/`에 저장한다.
+- 회사, 제품, 인물, 조직은 `llm-wiki/wiki/entities/`에 저장한다.
+- 판단이나 선택 근거는 `llm-wiki/wiki/decisions/`에 저장한다.
+- 원자료 자체는 `sources/`에서 수정하지 않는다.
+
+### 아이디어, 기획, 전략, 사업화 질문
+
+참고 순서:
+
+1. `graphify-out/GRAPH_REPORT.md`
+2. `llm-wiki/wiki/index.md`
+3. 관련 `concepts/`, `entities/`, `ideas/`, `decisions/`
+4. 필요하면 `graphify query "<아이디어와 관련된 질문>"`
+
+활용 도구:
+
+- LLM Wiki: 기존 지식과 아이디어를 연결
+- gstack `office-hours`: 약점, 시장성, 실행 가능성, 반박 질문으로 압박 검증
+- Superpowers `brainstorming`: 2-3개 접근안을 비교하고 추천안 도출
+
+성과물 저장:
+
+- 아이디어 노트는 `llm-wiki/wiki/ideas/`에 저장한다.
+- 의사결정이 생기면 `llm-wiki/wiki/decisions/`에 저장한다.
+- 실행 가능한 문서 초안은 `llm-wiki/outputs/docs/`에 저장한다.
+- 발표 자료 초안은 `llm-wiki/outputs/slides/`에 저장한다.
+- 자동화 코드나 Apps Script 산출물은 `llm-wiki/outputs/apps-script/`에 저장한다.
+
+### 실행계획, PoC, 구현, 자동화 요청
+
+참고 순서:
+
+1. 관련 wiki idea, decision, concept 문서
+2. 기존 `llm-wiki/outputs/docs/` 산출물
+3. 실제 코드나 스크립트가 있으면 `scripts/` 및 관련 파일
+
+활용 도구:
+
+- Superpowers `brainstorming`: 요구사항과 접근안 정리
+- Superpowers `writing-plans`: 구현 단계가 여러 개인 경우 실행계획 작성
+- Superpowers `test-driven-development`: 코드 변경이나 자동화 로직 구현 시 테스트 우선 검토
+- Superpowers `verification-before-completion`: 완료라고 말하기 전 검증
+- gstack `office-hours`: PoC의 가정, 리스크, 반론 검토
+
+성과물 저장:
+
+- 설계서, 실행계획, 운영 문서는 `llm-wiki/outputs/docs/`에 저장한다.
+- 코드 산출물은 성격에 따라 `scripts/` 또는 `llm-wiki/outputs/apps-script/`에 저장한다.
+- 작업 결과가 wiki 지식 구조에 영향을 주면 관련 `ideas/`, `decisions/`, `concepts/` 문서를 갱신한다.
+
+### 문서, 보고서, 발표자료 요청
+
+참고 순서:
+
+1. `llm-wiki/wiki/index.md`
+2. 관련 source/concept/entity/idea/decision 문서
+3. Graphify의 핵심 노드와 연결 관계
+
+활용 도구:
+
+- LLM Wiki: 근거 자료와 연결 구조 확보
+- gstack `office-hours`: 주장과 논리의 약점 점검
+- Superpowers `brainstorming`: 대상 독자, 목적, 구조, 톤 정리
+
+성과물 저장:
+
+- 보고서/제안서/기획서는 `llm-wiki/outputs/docs/`에 저장한다.
+- 발표자료 초안이나 slide outline은 `llm-wiki/outputs/slides/`에 저장한다.
+- 산출물 상단에는 목적, 대상 독자, 사용한 주요 wiki 문서, 작성일을 적는다.
+
+## 성과물 저장 원칙
+
+- 사용자가 저장 위치를 명시하면 그 위치를 우선한다.
+- 사용자가 위치를 명시하지 않으면 위의 질문 유형별 기본 위치에 저장한다.
+- `sources/`, `llm-wiki/`, `graphify-out/`의 실제 내용은 개인 작업물로 보고 GitHub에 올리지 않는다. 폴더 구조 유지를 위한 `.gitkeep`만 추적한다.
+- 모든 wiki 문서는 Obsidian에서 탐색하기 쉽게 `[[...]]` 링크를 적극 사용한다.
+- 새 문서를 만들거나 기존 wiki 구조를 바꾸면 `llm-wiki/wiki/index.md`와 `llm-wiki/wiki/log.md`를 갱신한다.
+- 작업 완료 전에는 필요한 검증 명령을 실행하고, 실행하지 못한 검증은 이유를 명확히 말한다.
