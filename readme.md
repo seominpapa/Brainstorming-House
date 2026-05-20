@@ -44,19 +44,95 @@ Brainstorming-House/
     └── cache/
 ```
 
-## 필수 의존성
+## 1. Setting
 
-| 도구 | 용도 | 설치 URL |
+가장 권장하는 설치 방식은 **Codex Desktop에서 아래 URL들을 붙여 넣고 설치를 맡기는 것**입니다. 필요한 의존성인 `Git`, `Node.js`, `uv`, `Python` 등이 없으면 Codex가 설치 명령을 실행합니다. 사용자는 승인 요청이 뜰 때 승인만 해주면 됩니다.
+
+Codex에 아래처럼 요청합니다.
+
+```text
+아래 절차대로 이 프로젝트 작업환경을 설치해줘.
+필요한 의존성(Git, Node.js/npm/npx, Python, uv, GitHub CLI)은 Codex가 확인하고, 없으면 설치 명령을 실행해줘.
+설치나 권한 승인이 필요한 경우 내가 승인할게.
+
+1. Codex Desktop 설치/확인
+https://openai.com/codex/
+
+2. Obsidian Desktop 설치 및 이 프로젝트 폴더를 vault로 설정
+https://obsidian.md/download
+
+3. Obsidian Web Clipper 크롬 확장자 설치 안내
+https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf
+
+4. Codex Desktop 실행 후 좌측 사이드바 Project에서 앞에서 설정한 Obsidian 폴더 선택
+
+5. LLM Wiki 스킬 추가(global 권장)
+https://github.com/lewislulu/llm-wiki-skill
+
+6. Graphify 설치
+https://graphify.net/
+https://github.com/safishamsi/graphify
+https://pypi.org/project/graphifyy/
+
+7. gstack 스킬 추가(global 권장)
+https://github.com/garrytan/gstack
+
+8. Superpowers 스킬 추가(global 권장)
+https://github.com/obra/superpowers
+https://skills.sh/obra/superpowers
+
+설치 후 이 저장소의 sources/, llm-wiki/, graphify-out/ 폴더 구조와 .gitignore 정책도 확인해줘.
+```
+
+### 설치 대상 요약
+
+| 대상 | 용도 | 설치 URL |
 | --- | --- | --- |
-| Git | 저장소 clone, commit, push | https://git-scm.com/downloads |
-| GitHub CLI | GitHub 인증, repo 생성/확인 | https://cli.github.com/ |
-| Node.js / npm / npx | Superpowers 설치, 로컬 graph HTML 생성 스크립트 | https://nodejs.org/ |
-| Python 3.10+ | Graphify 실행 기반 | https://www.python.org/downloads/ |
-| uv | Python CLI 도구 설치 권장 방식 | https://github.com/astral-sh/uv |
-| Codex | AI coding/agent 작업 환경 | https://github.com/openai/codex |
-| Obsidian | 로컬 Markdown wiki 탐색 | https://obsidian.md/download |
+| Codex Desktop | 프로젝트를 열고 설치/실행을 맡길 AI 작업 환경 | https://openai.com/codex/ |
+| Obsidian Desktop | 로컬 Markdown wiki 탐색 | https://obsidian.md/download |
+| Obsidian Web Clipper | 웹/SNS 자료를 `sources/`에 저장 | https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf |
+| LLM Wiki | 원본 자료를 지속적인 Markdown 지식베이스로 정리 | https://github.com/lewislulu/llm-wiki-skill |
+| Graphify | 지식 그래프와 HTML/JSON 리포트 생성 | https://graphify.net/ |
+| gstack | `office-hours` 방식의 아이디어 압박 검증 | https://github.com/garrytan/gstack |
+| Superpowers | brainstorming, planning, debugging, verification 스킬 묶음 | https://github.com/obra/superpowers |
 
-Windows 예시:
+### 의존성
+
+Codex가 설치 여부를 확인하고 필요 시 설치할 수 있는 의존성입니다.
+
+| 도구 | 왜 필요한가 | 설치 URL |
+| --- | --- | --- |
+| Git | 저장소 clone, 스킬 repo 다운로드, commit/push | https://git-scm.com/downloads |
+| GitHub CLI | GitHub 인증, repo 생성/확인 | https://cli.github.com/ |
+| Node.js / npm / npx | Superpowers 설치, `scripts/build-wiki-graph.mjs` 실행 | https://nodejs.org/ |
+| Python 3.10+ | Graphify 실행 기반 | https://www.python.org/downloads/ |
+| uv | `graphifyy` 같은 Python CLI 도구 설치 | https://github.com/astral-sh/uv |
+
+## 2. 실행
+
+1. Obsidian Web Clipper를 활용하여 관심 있는 웹/SNS 자료를 `sources/sns/`, `sources/web/` 폴더에 크래핑합니다.
+2. PDF 파일은 `sources/pdf/` 폴더에 업로드합니다.
+3. Codex에서 LLM Wiki 스킬로 `sources/` 자료 ingest를 수행합니다.
+4. `llm-wiki/wiki/`에 source, concept, entity, idea, decision 노트를 축적합니다.
+5. LLM Wiki 기반으로 Graphify 지식 graph를 생성합니다.
+6. 기획 아이디어를 제시합니다. 예: “AI 에이전트 기업 내 도입방안”
+7. LLM Wiki, gstack `office-hours`, Superpowers `brainstorming`을 활용해 아이디어를 구체화합니다.
+8. 필요한 경우 `llm-wiki/outputs/docs/`, `llm-wiki/outputs/slides/`, `llm-wiki/outputs/apps-script/`에 산출물을 작성합니다.
+
+Codex에 아래처럼 요청하면 됩니다.
+
+```text
+Obsidian Web Clipper로 모은 sources/ 자료를 LLM Wiki로 ingest해줘.
+그 다음 Graphify로 지식 graph를 만들고,
+"AI 에이전트 기업 내 도입방안" 아이디어를
+LLM Wiki 맥락, gstack office-hours, Superpowers brainstorming을 활용해 구체화해줘.
+```
+
+## 참고: 터미널 수동 설치 명령어
+
+Codex가 자동으로 처리하지 못하거나 직접 설치하고 싶을 때만 사용합니다.
+
+Windows 의존성 설치 예시:
 
 ```powershell
 winget install --id Git.Git -e
@@ -67,17 +143,7 @@ winget install --id astral-sh.uv -e
 npm i -g @openai/codex
 ```
 
-## 설치된/사용 중인 스킬
-
-### LLM Wiki
-
-LLM Wiki는 원본 자료를 반복해서 다시 읽는 대신, LLM이 원본을 Markdown 지식베이스로 컴파일하고 cross-link를 쌓아가는 방식입니다.
-
-- 참고 repo: https://github.com/lewislulu/llm-wiki-skill
-- OpenAI Skills Catalog: https://github.com/openai/skills
-- 현재 로컬 skill 경로 예시: `C:\Users\com\.codex\skills\llm-wiki-ideation\`
-
-Codex 설치 예시:
+LLM Wiki 수동 설치 예시:
 
 ```powershell
 git clone https://github.com/lewislulu/llm-wiki-skill.git C:\tmp\llm-wiki-skill
@@ -85,29 +151,14 @@ New-Item -ItemType Directory -Force $env:USERPROFILE\.codex\skills
 Copy-Item -Recurse -Force C:\tmp\llm-wiki-skill\llm-wiki $env:USERPROFILE\.codex\skills\llm-wiki
 ```
 
-이 프로젝트에서는 `llm-wiki-ideation` 형태로 확장해 사용합니다. 기본 작업 순서는 다음과 같습니다.
-
-1. `sources/`에 원본 자료 저장
-2. LLM Wiki skill로 `llm-wiki/wiki/sources`, `concepts`, `entities`, `ideas`, `decisions` 작성
-3. `llm-wiki/wiki/index.md`와 `llm-wiki/wiki/log.md` 갱신
-4. Graphify로 지식 그래프 갱신
-
-### Graphify
-
-Graphify는 코드/문서/PDF/Markdown을 분석해 지식 그래프를 만들고, `graphify-out/GRAPH_REPORT.md`, `graph.json`, `graph.html` 등을 생성합니다.
-
-- 공식 사이트: https://graphify.net/
-- GitHub: https://github.com/safishamsi/graphify
-- PyPI 패키지: https://pypi.org/project/graphifyy/
-
-설치:
+Graphify 수동 설치 예시:
 
 ```powershell
 uv tool install graphifyy
 graphify install --platform codex
 ```
 
-이 프로젝트의 Windows 권장 실행:
+이 프로젝트의 Windows 권장 Graphify 실행:
 
 ```powershell
 C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force
@@ -119,15 +170,7 @@ C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify u
 node scripts/build-wiki-graph.mjs
 ```
 
-### gstack
-
-gstack은 Garry Tan의 AI 작업용 스킬 묶음입니다. 이 저장소에서는 특히 `office-hours` 흐름으로 아이디어를 압박 질문으로 검증할 때 사용합니다.
-
-- 공식 사이트: https://gstack.lol/
-- GitHub: https://github.com/garrytan/gstack
-- office-hours skill: https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md
-
-Codex 설치 예시:
+gstack 수동 설치 예시:
 
 ```bash
 git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/gstack
@@ -137,40 +180,18 @@ cd ~/gstack
 
 Windows에서는 Git Bash 또는 WSL에서 위 명령을 실행하는 것을 권장합니다.
 
-사용 예시:
-
-```text
-Use gstack office-hours to pressure-test this idea:
-AI 에이전트 기업 도입 방안
-```
-
-### Superpowers
-
-Superpowers는 agent가 바로 구현으로 뛰어들지 않고, brainstorming, planning, TDD, debugging, verification 같은 절차를 지키도록 돕는 스킬 묶음입니다.
-
-- GitHub: https://github.com/obra/superpowers
-- Skills 페이지: https://skills.sh/obra/superpowers
-
-설치:
+Superpowers 수동 설치 예시:
 
 ```powershell
 npx skills add obra/superpowers
 ```
 
-개별 스킬 설치 예시:
+개별 Superpowers 스킬 설치 예시:
 
 ```powershell
 npx skills add https://github.com/obra/superpowers --skill brainstorming
 npx skills add https://github.com/obra/superpowers --skill verification-before-completion
 ```
-
-이 프로젝트에서 자주 쓰는 스킬:
-
-- `using-superpowers`: 관련 스킬을 먼저 확인
-- `brainstorming`: 아이디어를 2-3개 접근으로 비교
-- `writing-plans`: 구현 전 계획 작성
-- `systematic-debugging`: 문제 재현과 원인 확인
-- `verification-before-completion`: 완료 주장 전 검증
 
 ## 권장 작업 흐름
 
