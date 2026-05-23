@@ -1,4 +1,7 @@
+# Local tool and app state.
 .codex/
+.obsidian/
+.superpowers/
 .uv-cache/
 .uv-tools/
 
@@ -20,9 +23,6 @@ scources/**
 !scources/
 !scources/**/
 !scources/**/.gitkeep
-
-# Local editor/session state.
-.obsidian/workspace.json
 
 # OS/editor noise.
 Thumbs.db
