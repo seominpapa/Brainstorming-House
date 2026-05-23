@@ -119,14 +119,7 @@ Codex가 설치 여부를 확인하고 필요 시 설치할 수 있는 의존성
 7. LLM Wiki, gstack `office-hours`, Superpowers `brainstorming`을 활용해 아이디어를 구체화합니다.
 8. 필요한 경우 `llm-wiki/outputs/docs/`, `llm-wiki/outputs/slides/`, `llm-wiki/outputs/apps-script/`에 산출물을 작성합니다.
 
-Codex에 아래처럼 요청하면 됩니다.
-
-```text
-Obsidian Web Clipper로 모은 sources/ 자료를 LLM Wiki로 ingest해줘.
-그 다음 Graphify로 지식 graph를 만들고,
-"AI 에이전트 기업 내 도입방안" 아이디어를
-LLM Wiki 맥락, gstack office-hours, Superpowers brainstorming을 활용해 구체화해줘.
-```
+Codex에 요청할 때는 뒤의 `Codex 프롬프트 예시`를 참고합니다.
 
 ## 참고: 터미널 수동 설치 명령어
 
@@ -193,19 +186,15 @@ npx skills add https://github.com/obra/superpowers --skill brainstorming
 npx skills add https://github.com/obra/superpowers --skill verification-before-completion
 ```
 
-## 권장 작업 흐름
+## gstack과 Superpowers 사용 방식
 
-```text
-자료 수집
-→ sources/에 저장
-→ LLM Wiki ingest
-→ llm-wiki/wiki/에 지식 노트 작성
-→ gstack office-hours로 아이디어 검증
-→ Superpowers brainstorming으로 접근 비교
-→ 문서/슬라이드/Apps Script 산출물 작성
-→ Graphify update
-→ graphify-out/GRAPH_REPORT.md 확인
-```
+gstack은 아이디어를 투자자, 창업자, 운영자 관점에서 밀도 있게 검증하는 사고 프레임워크입니다. 이 작업공간에서는 주로 `office-hours` 방식을 사용해 문제의 크기, 시장성, 실행 가능성, 반박 질문, 다음 실험을 압박 검증합니다.
+
+Superpowers는 Codex가 작업을 진행할 때 쓰는 스킬 묶음입니다. `brainstorming`, `writing-plans`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, 코드 리뷰, git/worktree 관련 스킬처럼 기획부터 구현과 검증까지 단계별 작업 방식을 제공합니다.
+
+이 프로젝트의 기본 조합은 gstack `office-hours`와 Superpowers `brainstorming`입니다. 아이디어, 전략, 보고서, PoC 방향을 잡을 때는 이 둘로 가정과 접근안을 먼저 정리합니다.
+
+다만 코드 작성이나 자동화 구현이 필요하면 다른 Superpowers 스킬도 함께 사용할 수 있습니다. 예를 들어 구현 단계가 여러 개인 경우 `writing-plans`, 코드 변경이 필요한 경우 `test-driven-development`, 오류 원인 분석은 `systematic-debugging`, 완료 전 검증은 `verification-before-completion`을 사용합니다.
 
 ## 아이디어를 낼 때 참조 순서
 
