@@ -11,7 +11,6 @@ LLM Wiki, Graphify, gstack, Superpowers를 함께 사용하는 개인 지식 기
 - `sources/`: 원본 Markdown, PDF, 웹/SNS 캡처 자료
 - `llm-wiki/`: LLM이 정리한 위키 노트와 산출물
 - `graphify-out/`: Graphify 리포트, JSON, HTML, 캐시
-- `llm-wiki-graphify-gstack-superpowers-install-guide.txt`: 로컬 설치 가이드
 
 위 경로는 `.gitignore`로 내용 파일을 제외하고, clone 사용자가 폴더 구조를 볼 수 있도록 `.gitkeep`만 추적합니다.
 
