@@ -51,6 +51,6 @@
 		}
 	],
 	"triggers": [],
-	"noteNameFormat": "{{date:YYYY-MM-DD}}_{{title}}",
+	"noteNameFormat": "{{data}}_{{title}}",
 	"path": "sources/papers"
 }
