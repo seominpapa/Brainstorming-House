@@ -19,11 +19,6 @@ sources/**
 !sources/
 !sources/**/
 !sources/**/.gitkeep
-scources/**
-!scources/
-!scources/**/
-!scources/**/.gitkeep
-
 # OS/editor noise.
 Thumbs.db
 Desktop.ini
