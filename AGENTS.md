@@ -20,7 +20,8 @@
 - 로컬 HTML 그래프를 재생성할 때는 `node scripts/build-wiki-graph.mjs`를 우선 사용한다. 이 스크립트는 `graphify-out/graph.json`, `graphify-out/graph.html`, `graphify-out/wiki-graph.json`, `graphify-out/wiki-graph.html`을 생성하며, 한국어 UI label과 arrow marker를 포함한다.
 - "X와 Y가 어떻게 연결되는가" 같은 cross-module 질문은 grep보다 `graphify query "<question>"`, `graphify path "<A>" "<B>"`, `graphify explain "<concept>"`를 우선 사용한다. 이 명령들은 단순 파일 검색이 아니라 EXTRACTED + INFERRED edge를 따라간다.
 - Windows workspace에서 `graphify` shim이 경로 문제로 실패하면 `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify ...`를 사용한다.
-- 코드, wiki 구조, README/AGENTS 같은 프로젝트 운영 문서를 수정한 뒤에는 `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force`를 실행해 그래프를 최신 상태로 유지한다. 이 업데이트는 AST-only라 API 비용이 없다.
+- `sources/`, `llm-wiki/wiki/`, `llm-wiki/outputs/`, Graphify 생성 스크립트처럼 사용자 지식 콘텐츠나 그래프 생성 규칙에 영향을 주는 파일을 수정한 뒤에는 `C:\Users\com\AppData\Roaming\uv\tools\graphifyy\Scripts\python.exe -m graphify update . --force`를 실행해 그래프를 최신 상태로 유지한다. 이 업데이트는 AST-only라 API 비용이 없다.
+- `README`, `AGENTS.md`, `.gitignore`처럼 운영 설명이나 에이전트 행동 규칙만 바꾸는 경우에는 사용자 지식 그래프 변경이 아니므로 Graphify 갱신을 생략한다.
 
 ## 질문 유형별 작업 방식
 

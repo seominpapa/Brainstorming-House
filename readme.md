@@ -43,6 +43,17 @@ Brainstorming-House/
     └── cache/
 ```
 
+폴더 역할:
+
+| 폴더 | 역할 | GitHub 추적 방식 |
+| --- | --- | --- |
+| `scripts/` | 지식 그래프 생성, 위키 초기화/복구, 문서 생성처럼 재사용할 로컬 자동화 코드를 둡니다. | 스크립트 파일을 추적합니다. |
+| `sources/` | 웹, SNS, PDF 등 원자료를 보관하는 입력 폴더입니다. | 실제 자료는 제외하고 `.gitkeep`만 추적합니다. |
+| `llm-wiki/` | LLM이 정리한 source, concept, entity, idea, decision 노트와 문서/슬라이드/Apps Script 산출물을 둡니다. | 실제 노트와 산출물은 제외하고 `.gitkeep`만 추적합니다. |
+| `graphify-out/` | Graphify 리포트, JSON, HTML 그래프, 캐시를 생성하는 출력 폴더입니다. | 실제 결과물은 제외하고 `.gitkeep`만 추적합니다. |
+
+로컬 실행 중에는 `.codex/`, `.obsidian/`, `.superpowers/`, `.uv-cache/`, `.uv-tools/` 같은 숨김 폴더도 생길 수 있습니다. 이들은 Codex, Obsidian, Superpowers, uv/Graphify의 로컬 설정과 캐시이므로 GitHub에 올리지 않습니다.
+
 ## 1. Setting
 
 가장 권장하는 설치 방식은 **Codex Desktop에서 아래 URL들을 붙여 넣고 설치를 맡기는 것**입니다. 필요한 의존성인 `Git`, `Node.js`, `uv`, `Python` 등이 없으면 Codex가 설치 명령을 실행합니다. 사용자는 승인 요청이 뜰 때 승인만 해주면 됩니다.
