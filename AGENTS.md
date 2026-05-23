@@ -88,6 +88,23 @@ C:\Python314\python.exe -m http.server 8766 --bind 127.0.0.1
 3. `llm-wiki/wiki/log.md`
 4. 기존 `llm-wiki/wiki/sources/`, `concepts/`, `entities/`, `ideas/`
 
+`sources/` 입력 구조:
+
+- `sources/web/`, `sources/sns/`: Obsidian Web Clipper로 저장한 웹/SNS Markdown 원자료
+- `sources/clipper-*.json`: Web Clipper 설정 또는 분류용 파일
+- `sources/papers/pdf/`: 사용자가 직접 다운로드한 PDF 원본
+- `sources/papers/`: PDF 원본을 Codex가 읽고 Markdown으로 변환한 paper 원자료
+
+wiki ingest 요청 시 PDF 사전 처리:
+
+- 사용자가 wiki ingest를 요청하면 ingest 전에 `sources/papers/pdf/`에 새 PDF가 있는지 먼저 확인한다.
+- 각 PDF마다 `sources/papers/`에 이미 대응되는 Markdown 변환본이 있는지 확인한다. 파일명 stem, 제목, 또는 변환본의 `source`/`source_file` 메타데이터로 같은 원본임을 판단한다.
+- 대응되는 Markdown이 없으면 원본 PDF는 수정하지 않고, `sources/clipper-papers.json`의 형식에 맞춰 `sources/papers/`에 Markdown 변환본을 자동 생성한다.
+- 변환본에는 `title`, `source`, `source_type: paper`, `author`, `published`, `clipped`, `description`, `tags: clippings/paper`, `wiki_status: unprocessed` 메타데이터를 가능한 범위에서 포함한다.
+- 변환본 파일명은 `clipper-papers.json`의 `noteNameFormat`에 맞춰 `YYYY-MM-DD_제목.md`를 우선 사용하고, 제목이나 날짜를 알 수 없으면 PDF 파일명과 작업일을 사용한다.
+- 이미 변환본이 있으면 덮어쓰지 않는다. 내용 갱신이 필요해 보이면 사용자에게 확인하거나 별도 새 파일로 저장한다.
+- PDF 사전 처리가 끝난 뒤 `sources/web/`, `sources/sns/`, `sources/papers/`의 Markdown 원자료를 LLM Wiki ingest 대상으로 삼는다.
+
 활용 도구:
 
 - LLM Wiki 또는 `llm-wiki-ideation`: 원자료를 wiki note로 변환하고 cross-link 생성
@@ -95,11 +112,12 @@ C:\Python314\python.exe -m http.server 8766 --bind 127.0.0.1
 
 성과물 저장:
 
-- 웹/SNS/PDF 원자료 요약은 `llm-wiki/wiki/sources/`에 저장한다.
+- PDF 원본을 Markdown으로 변환해달라는 요청이면 원본 PDF는 수정하지 않고 변환본을 `sources/papers/`에 저장한다.
+- 웹/SNS 클리핑과 paper Markdown의 wiki 요약은 `llm-wiki/wiki/sources/`에 저장한다.
 - 반복 등장하는 주제는 `llm-wiki/wiki/concepts/`에 저장한다.
 - 회사, 제품, 인물, 조직은 `llm-wiki/wiki/entities/`에 저장한다.
 - 판단이나 선택 근거는 `llm-wiki/wiki/decisions/`에 저장한다.
-- 원자료 자체는 `sources/`에서 수정하지 않는다.
+- 원자료 자체는 `sources/`에서 수정하지 않는다. 단, PDF 변환 요청의 결과물은 원본과 구분해 `sources/papers/`에 새 Markdown 파일로 저장할 수 있다.
 
 ### 아이디어, 기획, 전략, 사업화 질문
 
@@ -186,7 +204,7 @@ C:\Python314\python.exe -m http.server 8766 --bind 127.0.0.1
 
 - 사용자가 저장 위치를 명시하면 그 위치를 우선한다.
 - 사용자가 위치를 명시하지 않으면 위의 질문 유형별 기본 위치에 저장한다.
-- `sources/`, `llm-wiki/`, `graphify-out/`의 실제 내용은 개인 작업물로 보고 GitHub에 올리지 않는다. 폴더 구조 유지를 위한 `.gitkeep`만 추적한다.
+- `sources/`, `llm-wiki/`, `graphify-out/`의 실제 내용은 개인 작업물로 보고 GitHub에 올리지 않는다. 폴더 구조 유지를 위한 `.gitkeep`과 재사용 가능한 `sources/clipper-*.json` 설정 파일만 추적한다.
 - 모든 wiki 문서는 Obsidian에서 탐색하기 쉽게 `[[...]]` 링크를 적극 사용한다.
 - 새 문서를 만들거나 기존 wiki 구조를 바꾸면 `llm-wiki/wiki/index.md`와 `llm-wiki/wiki/log.md`를 갱신한다.
 - 작업 완료 전에는 필요한 검증 명령을 실행하고, 실행하지 못한 검증은 이유를 명확히 말한다.

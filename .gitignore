@@ -19,6 +19,7 @@ sources/**
 !sources/
 !sources/**/
 !sources/**/.gitkeep
+!sources/clipper-*.json
 # OS/editor noise.
 Thumbs.db
 Desktop.ini
